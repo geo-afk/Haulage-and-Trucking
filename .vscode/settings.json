@@ -1,0 +1,37 @@
+{
+  "java.project.referencedLibraries": [
+    "lib/**/*.jar",
+    "flatlaf-3.3.jar",
+    "jcalendar-1.4.jar",
+    "log4j-api-2.22.1.jar",
+    "log4j-core-2.22.1.jar",
+    "mysql-connector-j-8.3.0.jar",
+    "hibernate-required/antlr-2.7.7.jar",
+    "hibernate-required/byte-buddy-1.10.10.jar",
+    "hibernate-required/classmate-1.5.1.jar",
+    "hibernate-required/dom4j-2.1.3.jar",
+    "hibernate-required/FastInfoset-1.2.15.jar",
+    "hibernate-required/hibernate-commons-annotations-5.1.0.Final.jar",
+    "hibernate-required/hibernate-core-5.4.18.Final.jar",
+    "hibernate-required/istack-commons-runtime-3.0.7.jar",
+    "hibernate-required/jandex-2.1.3.Final.jar",
+    "hibernate-required/javassist-3.24.0-GA.jar",
+    "hibernate-required/javax.activation-api-1.2.0.jar",
+    "hibernate-required/javax.persistence-api-2.2.jar",
+    "hibernate-required/jaxb-api-2.3.1.jar",
+    "hibernate-required/jaxb-runtime-2.3.1.jar",
+    "hibernate-required/jboss-logging-3.3.2.Final.jar",
+    "hibernate-required/jboss-transaction-api_1.2_spec-1.1.1.Final.jar",
+    "hibernate-required/stax-ex-1.8.jar",
+    "hibernate-required/txw2-2.3.1.jar"
+  ],
+  "cSpell.words": [
+    "invoicereport",
+    "JDBC"
+  ],
+  "java.project.sourcePaths": [
+    "HaulageAndTruckingServer",
+    "HaulageAndTruckingClient\\src",
+    "HaulageAndTruckingClient\\resources"
+  ]
+}
