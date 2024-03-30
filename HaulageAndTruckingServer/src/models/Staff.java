@@ -29,6 +29,7 @@ public class Staff implements Serializable{
 	
 	@Column(name = "d_o_b")
     private Date dateOfBirth;
+
     
     @OneToOne
 	@JoinColumn(name = "address_id")
@@ -46,19 +47,21 @@ public class Staff implements Serializable{
     // Constructor
 
     public Staff() {
-		// TODO Auto-generated constructor stub
 	}
 
 
-    
 
-    // Getters
+
+    public Long getStaffId() {
+        return id;
+    }
 
     public Staff(String firstName, String lastName, Date dateOfBirth, Address address, String email,
             String position, boolean status) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
+
         this.address = address;
         this.email = email;
         this.position = position;
@@ -67,10 +70,6 @@ public class Staff implements Serializable{
 
 
 
-
-    public Long getStaffId() {
-        return id;
-    }
 
     public String getFirstName() {
         return firstName;

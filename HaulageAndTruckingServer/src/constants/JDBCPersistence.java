@@ -3,14 +3,24 @@ package src.constants;
 import static java.sql.DriverManager.getConnection;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+
+
 
 public class JDBCPersistence {
 	
 	
+	private final static Logger logger = LogManager.getLogger(JDBCPersistence.class);
 
 	private JDBCPersistence() {
 	}
@@ -26,101 +36,150 @@ public class JDBCPersistence {
 
 	
 	
-	public static boolean isValidLogin(Long id, String password) {
+	public static boolean isValidLogin(String username, String password) {
 
-		final String sql = "SELECT staff_id, password FROM trucking.credentials WHERE staff_id = ? AND password = ?";
+		final String sql = "SELECT username, password FROM trucking.administrator WHERE username = ? AND password = ?";
+		logger.info("user login validating...");
 
 		try {
 			connection = getConnection(CREDENTIALS_URL, USERNAME, DB_PASSWORD);
 			statement = connection.prepareStatement(sql);
-			statement.setLong(1, id);
-			statement.setString(2, password);
+			statement.setString(1, username);
+			statement.setString(2, EncryptPassword.encrypt(password));
 
 			try (ResultSet result = statement.executeQuery()) {
+
+				logger.info("User found for user: " + username);
 				return result.next(); // Returns true if result set has at least one row
+				
 			}
+
 		} catch (SQLException e) {
-			e.printStackTrace(); // Consider logging the error instead
+			logger.error("ERROR: " + e.getMessage());
 			return false; // Return false on any exception
 		} finally {
+			logger.info("Closing database connection");
 			try {
 				connection.close();
 				statement.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				logger.error("ERROR: " + e.getMessage());
 			}
 
 		}
 	}
 
 
-	public void createStaffCredentials(Long staffId, Long id, String password) {
-
-	}
-
 	
-	
-	public static boolean isStaffIdPresent(Long id) {
+	public static boolean isStaffIdPresent(String username) {
 
-		final String sql = "SELECT staff_id FROM trucking.credentials WHERE staff_id = ?";
+		final String sql = "SELECT username FROM trucking.admin WHERE username = ?";
 
 		try {
-			connection = DriverManager.getConnection(CREDENTIALS_URL, USERNAME, DB_PASSWORD);
+			connection = getConnection(CREDENTIALS_URL, USERNAME, DB_PASSWORD);
 			statement = connection.prepareStatement(sql);
-			statement.setLong(1, id);
+			statement.setString(1, username);
 
 			try (ResultSet result = statement.executeQuery()) {
+				logger.info("Admin staff found: "+ username);
 				return result.next(); // Returns true if result set has at least one row
 			}
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("ERROR: " + e.getMessage());
 			return false;
 		} finally {
+			logger.info("Closing database connection");
 			try {
 				connection.close();
 				statement.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error("ERROR: " + e.getMessage());
 			}
 
 		}
 
 	}
-	
-	public static boolean resetPassword(Long id, String password) {
-		
-		final String sql = "UPDATE trucking.credentials SET password = ? WHERE staff_id = ?";
-        
-		
+
+
+	public static ArrayList<String> fetchStaffIdsFromDatabase() {
+
+		ArrayList<String> staffIds = null;
 		try {
-			connection = DriverManager.getConnection(CREDENTIALS_URL, USERNAME, DB_PASSWORD);
+			connection = getConnection(CREDENTIALS_URL, USERNAME, DB_PASSWORD);
+			String query = "SELECT id FROM trucking.staff";
+			statement = connection.prepareStatement(query);
+
+			staffIds = new ArrayList<>();
+
+			logger.info("Getting staff Ids from database");
+			try (ResultSet result = statement.executeQuery()) {
+				while (result.next()) {
+					String staffId = result.getString("id");
+					staffIds.add(staffId);
+				}
+			}
+
+		} 
+		catch (Exception e) {
+			logger.error("ERROR: " + e.getMessage());
+		} 
+		finally {
+			logger.info("Closing database connection");
+			try {
+
+				if (statement != null)
+					statement.close();
+			} catch (Exception e) {
+				logger.error("ERROR: " + e.getMessage());
+			}
+		}
+		return staffIds;
+    }
+
+
+
+	public static Map<String, List<String>> getAddress() {
+
+		final String sql = "SELECT address_1, address_2, parish, post_office from trucking.address";
+
+		Map<String, List<String>> address = new HashMap<>();
+
+		try {
+			connection = getConnection(CREDENTIALS_URL, USERNAME, DB_PASSWORD);
 			statement = connection.prepareStatement(sql);
-			statement.setLong(1, id);
-			statement.setString(1, password);
-			
-			 try (ResultSet result = statement.executeQuery()) 
-			 {
-				 return result.next(); // Returns true if result set has at least one row
-	         }
-				
+
+			try (ResultSet result = statement.executeQuery()) {
+				logger.info("Getting address details from database");
+				while (result.next()) {
+
+					String address1 = result.getString("address_1");
+					String address2 = result.getString("address_2");
+					String parish = result.getString("parish");
+					String postOffice = result.getString("post_office");
+
+					address.put(address1 + "-" + address2, List.of(parish, postOffice));
+
+				}
+			}
+
 		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
-		}finally {
-        	try {
+			logger.error("ERROR: " + e.getMessage());
+		} finally {
+			try {
+				logger.info("Closing database connection");
 				connection.close();
 				statement.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error("ERROR: " + e.getMessage());
 			}
-        	
-        }
-		
-		
-		
+
+		}
+		return address;
+
 	}
+
+
+	
+	
 }

@@ -18,8 +18,7 @@ public class Rate implements Serializable{
 		
 	}
 	
-    public Rate(Long rateId, String description, double value) {
-        this.id = rateId;
+    public Rate(String description, double value) {
         this.description = description;
         this.value = value;
     }
@@ -50,21 +49,12 @@ public class Rate implements Serializable{
         this.value = value;
     }
 
-    // Example Operations
-    public void addRate() {
-        // Implementation code for adding a rate to the database
+    @Override
+    public String toString() {
+        return "Rate [description=" + description + ", value=" + value + "]";
     }
 
-    public void updateRate() {
-        // Implementation code for updating rate details
-    }
 
-    public void deleteRate() {
-        // Implementation code for deleting a rate from the database
-    }
 
-    public Rate getRateDetails() {
-        // Return the rate details; in a real scenario, you would fetch this from the database
-        return this;
-    }
+    
 }

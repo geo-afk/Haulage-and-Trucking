@@ -65,6 +65,14 @@ public class Address implements Serializable{
 	public void setParish(String parish) {
 		this.parish = parish;
 	}
+
+	
+	@Override
+	public String toString() {
+		return "Address [address1=" + address1 + ", address2=" + address2 + ", postOffice=" + postOffice + ", parish="
+				+ parish + "]";
+	}
+	
 	
 	
 	 

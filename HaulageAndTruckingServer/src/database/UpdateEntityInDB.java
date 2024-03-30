@@ -1,47 +1,38 @@
 package src.database;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 public class UpdateEntityInDB {
 
-	private UpdateEntityInDB() {}
-	
-	
-	private static Session session;
-	private static Transaction trans;
-	
-	// List View of personals to choose to update
-	// In interface when performing an update on an object populate field 
-	// With data, then when update button is clicked sends the object here
-	
-	public static <T> void updateEntity(T object, Class<?> cls) {
-		
-		
+    private static final Logger logger = LogManager.getLogger(UpdateEntityInDB.class);
 
-		try {
-			session = GetSessionFactory.buildSessionFactory(cls)
-					.openSession();
+    private UpdateEntityInDB() {}
+
+    private static Session session;
+    private static Transaction trans;
+
+	public static <T> void updateEntity(T object, Class<?> cls) {
+		logger.info("updating Objects from database: " + object.getClass());
+        try {
 			
-			trans = session.beginTransaction();
-			
-			session.update(object);
-			
-			trans.commit();
-			
-			
-		}catch (RuntimeException e) {
+            session = GetSessionFactory.buildSessionFactory(cls).openSession();
+            trans = session.beginTransaction();
+            session.update(object);
+            trans.commit();
+        } catch (RuntimeException e) {
             if (trans != null && trans.isActive()) {
                 trans.rollback();
             }
-            e.printStackTrace();
-        } finally {
-			if (session != null && session.isOpen()) {
-				session.close();
-			}
-			GetSessionFactory.buildSessionFactory(cls).close();
+            logger.error("Error occurred while updating entity: " + e.getMessage(), e);
+            GetSessionFactory.buildSessionFactory(cls).close();
+		} finally {
+			logger.info("Closing sessions");
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
         }
-		
-	}
-
+    }
 }

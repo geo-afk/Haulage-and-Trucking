@@ -2,6 +2,9 @@ package com.gui.login;
 
 import javax.swing.*;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.gui.dashboard.DashboardMain;
 import com.gui.forgetpassword.*;
 import com.client.Client;
@@ -15,6 +18,8 @@ import java.beans.PropertyVetoException;
 public class LoginPage extends JInternalFrame implements ActionListener{
 
 	
+
+	private final static Logger logger = LogManager.getLogger(LoginPage.class);
 	/**
 	 * 
 	 */
@@ -24,7 +29,7 @@ public class LoginPage extends JInternalFrame implements ActionListener{
 	private GridBagConstraints constraints;
 	
 	
-	private JTextField staffId;
+	private JTextField staffUsername;
 	private JPasswordField staffPassword;
 	
 	
@@ -70,7 +75,7 @@ public class LoginPage extends JInternalFrame implements ActionListener{
     private void initializeStaffIdLabel(GridBagConstraints constraints) {
     	
     	JLabel staffIdLabel;
-    	staffIdLabel= new JLabel("Staff ID");
+    	staffIdLabel= new JLabel("Username");
     	staffIdLabel.setFont(new Font(null,Font.ITALIC, 20));
     	
     	
@@ -87,15 +92,15 @@ public class LoginPage extends JInternalFrame implements ActionListener{
     
     private void initializeStaffIdTxtField(GridBagConstraints constraints) {
     	
-    	staffId = new JTextField();
-    	staffId.setPreferredSize(new Dimension(450, 30));
+    	staffUsername = new JTextField();
+    	staffUsername.setPreferredSize(new Dimension(450, 30));
     	
     	constraints.anchor = GridBagConstraints.NORTHWEST;
     	constraints.gridx = 1;
     	constraints.gridy = 0;
     	constraints.insets = new Insets(0,0,40,0);
     	
-    	add(staffId, constraints);
+    	add(staffUsername, constraints);
     }
     
     
@@ -178,16 +183,16 @@ public class LoginPage extends JInternalFrame implements ActionListener{
 		
 		if (e.getSource() == login) {
 
-			if ((!staffId.getText().isEmpty()) && staffPassword.getPassword().length > 3) {
+			if ((!staffUsername.getText().isEmpty()) && staffPassword.getPassword().length > 3) {
 
-				Long id = Long.parseLong(staffId.getText().trim());
+
 				String password = String.copyValueOf(staffPassword.getPassword());
 				staffPassword.setText("");
 
-				
+				logger.info("Admin Logging into the system: "+ staffUsername.getText());
 				client.sendAction("Staff Login");
 
-				boolean found = client.validate(id, password);
+				boolean found = client.validate(staffUsername.getText(), password);
 
 				if (found) {
 					
@@ -199,6 +204,7 @@ public class LoginPage extends JInternalFrame implements ActionListener{
 
 				} else {
 
+					logger.info("Admin attempt to login failed: "+ staffUsername.getText());
 					JOptionPane.showMessageDialog(this, "Login Failed", "Login Failed", JOptionPane.ERROR_MESSAGE);
 				}
 			} else {

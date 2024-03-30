@@ -7,6 +7,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -16,32 +18,34 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.client.Client;
 import com.constants.DatePicker;
-
-import model.Trip;
+import model.TripReport;
 
 public class GenerateCustomerReport extends JPanel implements ActionListener {
 
-	private JLabel startDateLabel;
+	private final static Logger logger = LogManager.getLogger(GenerateCustomerReport.class);
+
+	
 	private DatePicker startDateTextField;
 
-	private JLabel endDateLabel;
+	
 	private DatePicker endDateTextField;
 
-	private JLabel driverLabel;
+	
 	private JTextField driverTextField;
 
 	private JButton reportButton;
 
-	private GridBagConstraints gbc;
+	
 	private JPanel topPanel;
 	private JPanel bottomPanel;
 
-	private JScrollPane scrollPane;
-
-
-	private JTable invoiceTable;
+	
+	
 
 	private DefaultTableModel model;
 
@@ -61,13 +65,15 @@ public class GenerateCustomerReport extends JPanel implements ActionListener {
 
 
 	
-	private void internalPanel(){
+	private void internalPanel() {
+		
+		
 
 		topPanel = new JPanel();
         topPanel.setLayout(new GridBagLayout());
 
 
-		gbc = new GridBagConstraints();
+		GridBagConstraints gbc = new GridBagConstraints();
 
 		initializeReportButton(gbc);
 		initializeStartDateComponents(gbc);
@@ -90,6 +96,8 @@ public class GenerateCustomerReport extends JPanel implements ActionListener {
 
 
 	private void initializeStartDateComponents(GridBagConstraints gbc) {
+		
+		JLabel startDateLabel;
 		startDateLabel = new JLabel("Start Date: ");
 
 		gbc.gridx = 0;
@@ -108,6 +116,7 @@ public class GenerateCustomerReport extends JPanel implements ActionListener {
 
 	private void initializeEndDateComponents(GridBagConstraints gbc) {
 		
+		JLabel endDateLabel;
 		endDateLabel = new JLabel("End Date: ");
 
 		gbc.gridx = 0;
@@ -124,6 +133,8 @@ public class GenerateCustomerReport extends JPanel implements ActionListener {
 	}
 
 	private void initializeDriverNameComponents(GridBagConstraints gbc) {
+		
+		JLabel driverLabel;
 		driverLabel = new JLabel("Driver Name: ");
 
 		gbc.gridx = 0;
@@ -158,18 +169,27 @@ public class GenerateCustomerReport extends JPanel implements ActionListener {
 		Client client = new Client();
 		if (e.getSource() == reportButton) {
 
-			client.sendAction("Get Invoice");
+			Date startDate = startDateTextField.convertToDate();
+			Date endDate = endDateTextField.convertToDate();
+			String driverName = driverTextField.getText();
 
-			List<Trip> trips = client.getTrips();
-
-			if (trips != null) {
-
-				setData(trips);
-			}
+			client.sendAction("Trip Report");
+			client.sendObject(driverName);
+			client.sendObject(new Timestamp(startDate.getTime()));
+			client.sendObject(new Timestamp(endDate.getTime()));
+			
+			@SuppressWarnings("unchecked")
+			List<TripReport> report = (List<TripReport>) client.getObject();
+			setData(report);
+			
 		}
+		client.closeConnection();
 	}
 
 	private void initializeTable(GridBagConstraints gbc) {
+		logger.info("Initializing The table and setting the column names ");
+		JTable invoiceTable;
+		JScrollPane scrollPane;
 
 		
 		model = new DefaultTableModel();
@@ -182,32 +202,38 @@ public class GenerateCustomerReport extends JPanel implements ActionListener {
     	gbc.weighty = 1.0;
 		gbc.insets = new Insets(0, 10, 0, 0); 
 
-		String[] columnNames = { "Invoice Number", "Customer Id", "Source Address", "Destination Address", "rate",
-				"Driver Id", "Billed By" };
+		String[] columnNames = { "Invoice Number", "Company", "Source Address", "Destination Address", "rate",
+				"Driver Name", "Billed By" };
 
 		model.setColumnIdentifiers(columnNames);
 		scrollPane = new JScrollPane(invoiceTable);
 		bottomPanel.add(scrollPane, gbc);
+
 	}
 
 	
 
 
-	public void setData(List<Trip> trips) {
+	public void setData(List<TripReport> report) {
 
-		for (Trip trip : trips) {
-			int invoiceNumber = trip.getInvoiceNumber();
-			Long customerId = trip.getCustomerId().getCustomerId();
+		logger.info("Loading data into the table");
 
-			String sourceAddress = trip.getSourceAddress().getAddress1() + " " + trip.getSourceAddress().getAddress2();
-			String destinationAddress = trip.getDestinationAddress().getAddress1() + " "
-					+ trip.getDestinationAddress().getAddress2();
+		for (TripReport report2 : report) {
 
-			Double rate = trip.getRate().getValue();
-			Long driverId = trip.getDriverId();
-			String billedBy = trip.getBilledBy().getFirstName() + " " + trip.getBilledBy().getLastName();
+			
+			Long invoiceNumber = report2.getInvoiceNumber();
+			String company = report2.getCompany();
 
-			Object[] row = { invoiceNumber, customerId, sourceAddress, destinationAddress, rate, driverId, billedBy };
+			String sourceAddress = report2.getSourceAddress();
+			String destinationAddress = report2.getDestinationAddress();
+
+			Double rate = report2.getRate();
+
+			String driverName = report2.getDriverName();
+			String billedBy = report2.getBilledBy();
+
+
+			Object[] row = { invoiceNumber, company, sourceAddress, destinationAddress, rate, driverName, billedBy };
 			model.addRow(row);
 
 		}

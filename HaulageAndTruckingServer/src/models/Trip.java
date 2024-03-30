@@ -1,9 +1,12 @@
 package src.models;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
@@ -13,200 +16,114 @@ import javax.persistence.Table;
 @Table(name = "trip")
 public class Trip implements Serializable{
 	
-	@Id   //Will Generate Manually
-    private int invoiceNumber;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+    private long invoiceNumber;
     
-	@OneToOne
-	@JoinColumn(name = "customer_id")
-    private Customer customerId;
-	
-	@OneToOne
-	@JoinColumn(name = "address_id")
-    private Address sourceAddress;
-	
-	@OneToOne
-	@JoinColumn(name = "address_id")
-    private Address destinationAddress;
+	@Column(name = "company")
+    private String company;
+
 	
 	
 	@OneToOne
-	@JoinColumn(name = "rate_id")
-    private Rate rate;
+	@JoinColumn(name = "route_id")
+    private Route route;
 	
-	@Column(name = "driver_id")
-    private int driverId;
+	@Column(name = "driver_name")
+    private String driver;
 	
+	@Column(name = "billed_by")
+	private String billedBy;
 	
-	
-	@OneToOne
-	@JoinColumn(name = "staff_id")
-    private Staff billedBy;
+
+	@Column(name = "delivery_date")
+	private Date deliveryDate;
+
+
+	@Column(name = "pay_status")
+    private String payStatus;
 
 	// Constructor
 	
 	public Trip() {
-		
+
 	}
+	
 
+	
 
-	public Trip(int invoiceNumber, Customer customerId, Address sourceAddress, Address destinationAddress, Rate rate,
-			int driverId, Staff billedBy) {
-		super();
-		this.invoiceNumber = invoiceNumber;
-		this.customerId = customerId;
-		this.sourceAddress = sourceAddress;
-		this.destinationAddress = destinationAddress;
-		this.rate = rate;
-		this.driverId = driverId;
+	public Trip(String company, Route route, String driver, String billedBy, Date deliveryDate,
+			String payStatus) {
+		this.company = company;
+		this.route = route;
+		this.driver = driver;
 		this.billedBy = billedBy;
+		this.deliveryDate = deliveryDate;
+		this.payStatus = payStatus;
 	}
-	
 
-
-	
-
-
-    public int getInvoiceNumber() {
+	public long getInvoiceNumber() {
 		return invoiceNumber;
 	}
-
-
-
-
-
 
 	public void setInvoiceNumber(int invoiceNumber) {
 		this.invoiceNumber = invoiceNumber;
 	}
 
-
-
-
-
-
-	public Customer getCustomerId() {
-		return customerId;
+	public String getCompany() {
+		return company;
 	}
 
-
-
-
-
-
-	public void setCustomerId(Customer customerId) {
-		this.customerId = customerId;
+	public void setCompany(String company) {
+		this.company = company;
 	}
 
-
-
-
-
-
-	public Address getSourceAddress() {
-		return sourceAddress;
+	public Route getRoute() {
+		return route;
 	}
 
-
-
-
-
-
-	public void setSourceAddress(Address sourceAddress) {
-		this.sourceAddress = sourceAddress;
+	public void setRoute(Route route) {
+		this.route = route;
 	}
 
-
-
-
-
-
-	public Address getDestinationAddress() {
-		return destinationAddress;
+	public String getDriver() {
+		return driver;
 	}
 
-
-
-
-
-
-	public void setDestinationAddress(Address destinationAddress) {
-		this.destinationAddress = destinationAddress;
+	public void setDriver(String driver) {
+		this.driver = driver;
 	}
 
-
-
-
-
-
-	public Rate getRate() {
-		return rate;
-	}
-
-
-
-
-
-
-	public void setRate(Rate rate) {
-		this.rate = rate;
-	}
-
-
-
-
-
-
-	public int getDriverId() {
-		return driverId;
-	}
-
-
-
-
-
-
-	public void setDriverId(int driverId) {
-		this.driverId = driverId;
-	}
-
-
-
-
-
-
-	public Staff getBilledBy() {
+	public String getBilledBy() {
 		return billedBy;
 	}
 
-
-
-
-
-
-	public void setBilledBy(Staff billedBy) {
+	public void setBilledBy(String billedBy) {
 		this.billedBy = billedBy;
 	}
 
+	public Date getDeliveryDate() {
+		return deliveryDate;
+	}
+
+	public void setDeliveryDate(Date startDate) {
+		this.deliveryDate = startDate;
+	}
+
+	
+
+	public String getPayStatus() {
+		return payStatus;
+	}
+
+	public void setPayStatus(String payStatus) {
+		this.payStatus = payStatus;
+	}
+	
+
+
+	
 
 
 
-
-
-	// Example Operations
-    public void addTripOrder() {
-        // Implementation code for adding a trip/order to the database
-    }
-
-    public void updateTripOrder() {
-        // Implementation code for updating a trip/order details
-    }
-
-    public void deleteTripOrder() {
-        // Implementation code for deleting a trip/order from the database
-    }
-
-    public Trip getTripOrderDetails() {
-        // Return the trip/order details; in a real scenario, you would fetch this from the database
-        return this;
-    }
 }

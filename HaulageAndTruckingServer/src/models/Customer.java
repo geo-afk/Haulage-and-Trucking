@@ -8,7 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 
@@ -27,7 +27,7 @@ public class Customer implements Serializable{
     private String contactPerson;
 
     
-    @OneToMany()
+    @OneToOne()
     @JoinColumn(name = "address_id")
     private Address address;
     
@@ -38,7 +38,7 @@ public class Customer implements Serializable{
     private String email;
     
     @Column(name = "status")
-    private String status;
+    private Boolean status;
 
     // Constructor
     
@@ -50,7 +50,7 @@ public class Customer implements Serializable{
 
 
     public Customer(Long id, String companyName, String contactPerson, Address address, String telephone, String email,
-			String status) {
+			boolean status) {
 		super();
 		this.id = id;
 		this.companyName = companyName;
@@ -88,7 +88,7 @@ public class Customer implements Serializable{
         return email;
     }
 
-    public String getStatus() {
+    public boolean getStatus() {
         return status;
     }
 
@@ -120,7 +120,7 @@ public class Customer implements Serializable{
         this.email = email;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(boolean status) {
         this.status = status;
     }
 

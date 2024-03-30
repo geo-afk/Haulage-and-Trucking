@@ -11,7 +11,7 @@ public class Customer implements Serializable{
     private Address address;
     private String telephone;
     private String email;
-    private String status;
+    private boolean status;
 
 
     // Constructor
@@ -23,16 +23,18 @@ public class Customer implements Serializable{
     
 
 
-    public Customer(Long id, String companyName, String contactPerson, Address address, String telephone, String email,
-			String status) {
-		this.id = id;
-		this.companyName = companyName;
-		this.contactPerson = contactPerson;
-		this.address = address;
-		this.telephone = telephone;
-		this.email = email;
-		this.status = status;
-	}
+    public Customer(String companyName, String contactPerson, Address address, String telephone, String email,
+            boolean status) {
+        this.companyName = companyName;
+        this.contactPerson = contactPerson;
+        this.address = address;
+        this.telephone = telephone;
+        this.email = email;
+        this.status = status;
+    }
+    
+
+    
 
 
 	// Getters
@@ -61,7 +63,7 @@ public class Customer implements Serializable{
         return email;
     }
 
-    public String getStatus() {
+    public boolean getStatus() {
         return status;
     }
 
@@ -93,7 +95,7 @@ public class Customer implements Serializable{
         this.email = email;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(boolean status) {
         this.status = status;
     }
 

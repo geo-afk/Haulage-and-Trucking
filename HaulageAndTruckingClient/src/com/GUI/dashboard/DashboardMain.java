@@ -103,12 +103,4 @@ public class DashboardMain extends JFrame{
         add(tabScreen);
         sideBar.setDesktopAndTabbedPane(desktopPane, tabScreen);
     }
-
-
-    // public static void main(String[] args) {
-
-    //     FlatDarkLaf.setup();
-    //     new Main().setVisible(true);
-    // }
-    
 }

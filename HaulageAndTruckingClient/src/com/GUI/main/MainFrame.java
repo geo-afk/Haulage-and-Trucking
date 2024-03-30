@@ -19,10 +19,9 @@ public class MainFrame extends JFrame{
 	 */
 	private static final long serialVersionUID = 6997650226727883582L;
 	
-	int width;
-    int height;
+	int frameWidth;
+    int frameHeight;
 
-    private JDesktopPane desktopPane;
     private Options options;
 
 
@@ -50,7 +49,7 @@ public class MainFrame extends JFrame{
 
 
     private void setOptionsPanel() {
-        options=new Options(this.width, this.height);
+        options=new Options(this.frameWidth, this.frameHeight);
        
         add(options, BorderLayout.WEST);
        
@@ -65,11 +64,11 @@ public class MainFrame extends JFrame{
         }
 
         Toolkit toolkit = Toolkit.getDefaultToolkit();
-        this.width = (int) (toolkit.getScreenSize().getWidth() * 0.6);
-        this.height = (int) (toolkit.getScreenSize().getHeight()  * 0.7);
+        this.frameWidth = (int) (toolkit.getScreenSize().getWidth() * 0.6);
+        this.frameHeight = (int) (toolkit.getScreenSize().getHeight()  * 0.7);
 
 
-        setSize(this.width,this.height);
+        setSize(this.frameWidth,this.frameHeight);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
         setLocationRelativeTo(null);
@@ -80,14 +79,13 @@ public class MainFrame extends JFrame{
 
 
     private void initializeDesktopPane(){
-        desktopPane = new JDesktopPane();
+        JDesktopPane desktopPane = new JDesktopPane();
         
         options.setDesktopPane(desktopPane);
         
         add(desktopPane);
     }
 
-    
     
 	public static void main(String[] args) {
 

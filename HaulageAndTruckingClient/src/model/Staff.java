@@ -14,7 +14,7 @@ public class Staff implements Serializable{
 	
 	
     private Date dateOfBirth;
-    
+
    
     private Address address;
     
@@ -30,13 +30,23 @@ public class Staff implements Serializable{
     // Constructor
 
     public Staff() {
-        // TODO Auto-generated constructor stub
+        
     }
     
 
 
 
     // Getters
+
+ 
+    
+
+
+
+
+    public Long getStaffId() {
+        return id;
+    }
 
     public Staff(String firstName, String lastName, Date dateOfBirth, Address address, String email,
             String position, boolean status) {
@@ -51,10 +61,6 @@ public class Staff implements Serializable{
 
 
 
-
-    public Long getStaffId() {
-        return id;
-    }
 
     public String getFirstName() {
         return firstName;

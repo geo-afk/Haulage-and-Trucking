@@ -23,74 +23,80 @@ public class Route implements Serializable{
     private String source;
 	
 	@OneToOne
-	@JoinColumn(name = "address_id")
-    private Address destination;
+	@JoinColumn(name = "destinationAddress")
+    private Address destinationAddress;
+
+    @OneToOne
+	@JoinColumn(name = "sourceAddress")
+    private Address sourceAddress;
 	
 	@OneToOne
 	@JoinColumn(name = "rate_id")
     private Rate rateId; // This assumes rates are managed separately and linked to routes
 
     // Constructor
-	public Route() {// TODO Auto-generated constructor stub
+    public Route() {
+        
 	}
-	
-	
-    public Route(Long routeId, String source, Address destination, Rate rateId) {
-        this.id = routeId;
+
+    public Route(String source, Address destinationAddress, Address sourceAddress, Rate rateId) {
         this.source = source;
-        this.destination = destination;
+        this.destinationAddress = destinationAddress;
+        this.sourceAddress = sourceAddress;
         this.rateId = rateId;
     }
 
-    // Getters
-    public Long getRouteId() {
-        return this.id;
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getSource() {
         return source;
     }
 
-    public Address getDestination() {
-        return destination;
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public Address getDestinationAddress() {
+        return destinationAddress;
+    }
+
+    public void setDestinationAddress(Address destinationAddress) {
+        this.destinationAddress = destinationAddress;
+    }
+
+    public Address getSourceAddress() {
+        return sourceAddress;
+    }
+
+    public void setSourceAddress(Address sourceAddress) {
+        this.sourceAddress = sourceAddress;
     }
 
     public Rate getRateId() {
         return rateId;
     }
 
-    // Setters
-    public void setRouteId(Long routeId) {
-        this.id = routeId;
-    }
-
-    public void setSource(String source) {
-        this.source = source;
-    }
-
-    public void setDestination(Address destination) {
-        this.destination = destination;
-    }
-
     public void setRateId(Rate rateId) {
         this.rateId = rateId;
     }
 
-    // Example Operations
-    public void addRoute() {
-        // Implementation code for adding a route to the database
+    @Override
+    public String toString() {
+        return "Route [source=" + source + ", destinationAddress=" + destinationAddress + ", sourceAddress="
+                + sourceAddress + ", rateId=" + rateId + "]";
     }
+	
 
-    public void updateRoute() {
-        // Implementation code for updating route details
-    }
 
-    public void deleteRoute() {
-        // Implementation code for deleting a route from the database
-    }
 
-    public Route getRouteDetails() {
-        // Return the route details; in a real scenario, you would fetch this from the database
-        return this;
-    }
+    
+    
+    
+	
 }

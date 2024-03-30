@@ -4,12 +4,15 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.List;
 
-import model.Trip;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-public class Client{
+
+public class Client {
     
+    private static Logger logger = LogManager.getLogger(Client.class);
+
     private  Socket server;
     private  ObjectOutputStream outputStream;
     private  ObjectInputStream inputStream;
@@ -27,9 +30,10 @@ public class Client{
     private void configureConnection() {
 
         try {
-            server = new Socket( "localhost", 8040);
+            server = new Socket("localhost", 8040);
+            logger.info("Socket is configured at port 8040");
         } catch (IOException e) {
-            e.printStackTrace();
+           logger.error("Error: " + e.getMessage());
         }
     }
 
@@ -40,9 +44,10 @@ public class Client{
 
             outputStream = new ObjectOutputStream(server.getOutputStream());
             inputStream = new ObjectInputStream(server.getInputStream());
+            logger.info("Input and Output streams configured..");
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error: " + e.getMessage());
         }
 
     }
@@ -50,6 +55,8 @@ public class Client{
     
 
     public void closeConnection() {
+
+        logger.info("Closing Streams..");
 
         try {
 
@@ -59,41 +66,47 @@ public class Client{
             if (inputStream != null) {
                 inputStream.close();
             }
-            server.close();
+            if(server != null){
+                server.close();
+            }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error: " + e.getMessage());
         }
     }
     
     
     public void sendAction(String action) {
 
+        logger.info("Sending action to server: " + action);
+
         try {
             outputStream.writeObject(action);
         } catch (IOException e) {
-       
-            e.printStackTrace();
+            logger.error("Error: " + e.getMessage());
         }
     }
 
 
 
-    public boolean validate(Long staffId, String password) {
+    public boolean validate(String username, String password) {
 
         try {
 
-            outputStream.writeObject(staffId);
+            logger.info("Validating user login: Username: "+ username);
+            outputStream.writeObject(username);
             outputStream.writeObject(password);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error: " + e.getMessage());
         }
 
         try {
+            
             response = (boolean) inputStream.readObject();
+             logger.info("Server response to user login is = " + response);
         } catch (ClassNotFoundException | IOException e) {
-            e.printStackTrace();
+            logger.error("Error: " + e.getMessage());
             return false;
         }
 
@@ -104,106 +117,52 @@ public class Client{
     public void sendObject(Object obj) {
 
         try {
+            
+            logger.info("Sending object to Server");
             outputStream.writeObject(obj);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error: " + e.getMessage());
         }
     }
     
-    
-    // public void receiveResponse() {
 
-    //     try {
+    public Object getObject() {
 
-    //         response = (boolean) inputStream.readObject();
-
-    //         if (request.equalsIgnoreCase("Add Staff")) {
-
-    //             if (response) {
-    //                 JOptionPane.showMessageDialog(null, "Staff added successfully", "Success",
-    //                         JOptionPane.INFORMATION_MESSAGE);
-
-    //             } else {
-    //                 JOptionPane.showMessageDialog(null, "Staff not added", "",
-    //                         JOptionPane.ERROR_MESSAGE);
-    //             }
-    //         }
-
-    //         if (request.equalsIgnoreCase("Reset Password")) {
-
-    //             if (response) {
-    //                 JOptionPane.showMessageDialog(null, "Password reset successfully", "Success",
-    //                         JOptionPane.INFORMATION_MESSAGE);
-
-    //             } else {
-    //                 JOptionPane.showMessageDialog(null, "Password not reset", "Error",
-    //                         JOptionPane.ERROR_MESSAGE);
-    //             }
-
-    //         }
-
-    //         if (request.equalsIgnoreCase("Get Invoice") && (!response)) {
-
-    //             JOptionPane.showMessageDialog(null, "No Invoice Found", "Error",
-    //                     JOptionPane.ERROR_MESSAGE);
-
-    //         }
-
-    //     } catch (ClassCastException | ClassNotFoundException | IOException ex) {
-    //         ex.printStackTrace();
-    //     }
-    // }
-
-    
-
-    public List<Trip> getTrips() {
+        Object obj = null;
         try {
-            Object obj = inputStream.readObject();
-            return castToTripList(obj);
-        } catch (ClassNotFoundException | IOException e) {
-            e.printStackTrace();
+             logger.info("Retrieving object from server");
+            obj = inputStream.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            logger.error("Error: " + e.getMessage());
         }
-        return List.of();
+
+        return obj;
+
     }
-
-    private List<Trip> castToTripList(Object obj) {
-        if (obj instanceof List<?>) {
-            @SuppressWarnings("unchecked")
-            List<Trip> trips = (List<Trip>) obj;
-            return trips;
-        }
-        return List.of();
-    }
-
-
     
-    public void resetPassword(Long staffId, String newPassword) 
-    {
-        try {
-            outputStream.writeObject(staffId);
-            outputStream.writeObject(newPassword);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
 
-    public boolean staffExists(Long staffId) {
+
+    public boolean staffExists(String username) {
 
         this.sendAction("Does Staff Exist");
+        logger.info("Sending action [Does Staff Exist] to server");
         try {
-            outputStream.writeObject(staffId);
+            outputStream.writeObject(username);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error: " + e.getMessage());
         }
-
 
         try {
             response = (boolean) inputStream.readObject();
+            logger.info("Server response for [Does Staff Exist] = " + response);
         } catch (ClassNotFoundException | IOException e) {
-            e.printStackTrace();
+            logger.error("Error: " + e.getMessage());
             return false;
         }
         return response;
     }
+    
+    
+
 }

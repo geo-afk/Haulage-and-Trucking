@@ -1,191 +1,110 @@
 package model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class Trip implements Serializable{
 	
 	
-    private int invoiceNumber;
-    
-
-    private Customer customerId;
+    private long invoiceNumber;
 	
-	
-    private Address sourceAddress;
-	
-	
-    private Address destinationAddress;
+	private String company;
 	
 
-    private Rate rate;
+    private Route route;
 	
 	
-    private Long driverId;
+    private String driver;
 	
 
-    private Staff billedBy;
+	private String billedBy;
+	
+	private Date deliveryDate;
+	
+    private String payStatus;
 
     // Constructor
 
 
-	public Trip(int invoiceNumber, Customer customerId, Address sourceAddress, Address destinationAddress, Rate rate,
-			Long driverId, Staff billedBy) {
-		super();
-		this.invoiceNumber = invoiceNumber;
-		this.customerId = customerId;
-		this.sourceAddress = sourceAddress;
-		this.destinationAddress = destinationAddress;
-		this.rate = rate;
-		this.driverId = driverId;
-		this.billedBy = billedBy;
+	public Trip() {
+
 	}
-	
 
+	public Trip(String company, Route route, String driver, String billedBy, Date deliveryDate, 
+			String payStatus) {
+		this.company = company;
+		this.route = route;
+		this.driver = driver;
+		this.billedBy = billedBy;
+		this.deliveryDate = deliveryDate;
+		this.payStatus = payStatus;
+	}
 
-	
-
-
-    public int getInvoiceNumber() {
+	public long getInvoiceNumber() {
 		return invoiceNumber;
 	}
 
-
-
-
-
-
-	public void setInvoiceNumber(int invoiceNumber) {
+	public void setInvoiceNumber(long invoiceNumber) {
 		this.invoiceNumber = invoiceNumber;
 	}
 
-
-
-
-
-
-	public Customer getCustomerId() {
-		return customerId;
+	public String getCompany() {
+		return company;
 	}
 
-
-
-
-
-
-	public void setCustomerId(Customer customerId) {
-		this.customerId = customerId;
+	public void setCompany(String company) {
+		this.company = company;
 	}
 
-
-
-
-
-
-	public Address getSourceAddress() {
-		return sourceAddress;
+	public Route getRoute() {
+		return route;
 	}
 
-
-
-
-
-
-	public void setSourceAddress(Address sourceAddress) {
-		this.sourceAddress = sourceAddress;
+	public void setRoute(Route route) {
+		this.route = route;
 	}
 
-
-
-
-
-
-	public Address getDestinationAddress() {
-		return destinationAddress;
+	public String getDriver() {
+		return driver;
 	}
 
-
-
-
-
-
-	public void setDestinationAddress(Address destinationAddress) {
-		this.destinationAddress = destinationAddress;
+	public void setDriver(String driver) {
+		this.driver = driver;
 	}
 
-
-
-
-
-
-	public Rate getRate() {
-		return rate;
-	}
-
-
-
-
-
-
-	public void setRate(Rate rate) {
-		this.rate = rate;
-	}
-
-
-
-
-
-
-	public long getDriverId() {
-		return driverId;
-	}
-
-
-
-
-
-
-	public void setDriverId(long driverId) {
-		this.driverId = driverId;
-	}
-
-
-
-
-
-
-	public Staff getBilledBy() {
+	public String getBilledBy() {
 		return billedBy;
 	}
 
-
-
-
-
-
-	public void setBilledBy(Staff billedBy) {
+	public void setBilledBy(String billedBy) {
 		this.billedBy = billedBy;
+	}
+
+	public Date getDeliveryDate() {
+		return deliveryDate;
+	}
+
+	public void setDeliveryDate(Date deliveryDate) {
+		this.deliveryDate = deliveryDate;
 	}
 
 
 
 
+	public String getPayStatus() {
+		return payStatus;
+	}
+
+	public void setPayStatus(String payStatus) {
+		this.payStatus = payStatus;
+	}
+	
 
 
-	// Example Operations
-    public void addTripOrder() {
-        // Implementation code for adding a trip/order to the database
-    }
+	
 
-    public void updateTripOrder() {
-        // Implementation code for updating a trip/order details
-    }
+	
 
-    public void deleteTripOrder() {
-        // Implementation code for deleting a trip/order from the database
-    }
 
-    public Trip getTripOrderDetails() {
-        // Return the trip/order details; in a real scenario, you would fetch this from the database
-        return this;
-    }
+	   
 }

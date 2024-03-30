@@ -77,4 +77,12 @@ public class Rate implements Serializable{
         // Return the rate details; in a real scenario, you would fetch this from the database
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "Rate [description=" + description + ", value=" + value + "]";
+    }
+
+
+    
 }

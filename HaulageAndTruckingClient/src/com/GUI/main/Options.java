@@ -7,7 +7,6 @@ import javax.swing.border.Border;
 
 import com.gui.forgetpassword.ForgotPassword;
 import com.gui.login.LoginPage;
-import com.gui.staffsignup.SignUpPage;
 import com.gui.welcomescreen.WelcomeScreen;
 import com.constants.ConstantFunctions;
 import com.constants.CustomButton;

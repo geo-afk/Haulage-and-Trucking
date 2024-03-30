@@ -15,12 +15,6 @@ import com.constants.ConstantFunctions;
 
 public class WelcomeScreen extends JInternalFrame{
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	
-
 	
 	private GridBagConstraints constraints;
 	
@@ -91,7 +85,7 @@ public class WelcomeScreen extends JInternalFrame{
 		JLabel aSlogan;
 		String slogan = "Journeying Together, Hauling with Heart, Connecting Communities!";
 		aSlogan = new JLabel(slogan);
-		aSlogan.setFont(new Font(null, Font.ITALIC, 15));
+		aSlogan.setFont(new Font(Font.MONOSPACED, Font.BOLD, 15));
 		aSlogan.setForeground(new Color(143, 94, 51));
 		
 		

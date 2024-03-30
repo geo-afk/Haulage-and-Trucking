@@ -12,7 +12,10 @@ import javax.swing.ImageIcon;
 
 import com.client.Client;
 import com.constants.ConstantFunctions;
+import com.constants.EncryptPassword;
 import com.gui.login.LoginPage;
+
+import model.Admin;
 
 import javax.swing.JButton;
 import javax.swing.JDesktopPane;
@@ -22,9 +25,14 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-public class ForgotPassword extends JInternalFrame implements ActionListener{
 
+public class ForgotPassword extends JInternalFrame implements ActionListener {
+
+	
+	private final static Logger logger = LogManager.getLogger(ForgotPassword.class);
 	
 	private static final long serialVersionUID = 8509240026274310800L;
 	
@@ -33,12 +41,10 @@ public class ForgotPassword extends JInternalFrame implements ActionListener{
 	
 	
 	
-	private JLabel searchLabel;
-	private JTextField searchId;
+	
+	private JTextField searchUsername;
 	private JButton searchButton;
 	
-	
-	private LoginPage loginPage;
 	
 	public JDesktopPane desktopPane;
 	
@@ -49,6 +55,7 @@ public class ForgotPassword extends JInternalFrame implements ActionListener{
 	public ForgotPassword() {
 		
 		super("Forgot Password?");
+		logger.info("Forget password frame is instantiated");
 		setIcon();
 		setLayout(new GridBagLayout());
 		
@@ -85,7 +92,7 @@ public class ForgotPassword extends JInternalFrame implements ActionListener{
 	
 	private void initializeSearchIdLabel(){
 		
-		searchLabel = new JLabel("Enter Your ID number To Search");
+		JLabel searchLabel = new JLabel("Enter Staff username To Search");
 		searchLabel.setFocusable(false);
 		searchLabel.setFont(new Font(null, Font.BOLD, 15));
 		
@@ -103,7 +110,7 @@ public class ForgotPassword extends JInternalFrame implements ActionListener{
 	
 	private void initializeSearchIdField() 
 	{
-		searchId = new JTextField(40);
+		searchUsername = new JTextField(40);
 		
 		constraints = new GridBagConstraints();
 		
@@ -115,67 +122,75 @@ public class ForgotPassword extends JInternalFrame implements ActionListener{
 		
 		
 		
-		add(searchId, constraints);
+		add(searchUsername, constraints);
 	}
 	
 	private void initializeSearchButton() 
 	{
 		searchButton = new JButton("Search");
-		searchButton.setPreferredSize(new Dimension(100,30));
+		searchButton.setPreferredSize(new Dimension(100, 30));
 		searchButton.addActionListener(this);
-		
-		
+
 		constraints = new GridBagConstraints();
-		
+
 		constraints.gridx = 0;
 		constraints.gridy = 2;
 		constraints.anchor = GridBagConstraints.SOUTH;
-		constraints.insets = new Insets(50,0,0,0);
-		
-		
+		constraints.insets = new Insets(50, 0, 0, 0);
+
 		add(searchButton, constraints);
-		
+
 	}
 
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
 
 		Client client = new Client();
 
-		if (e.getSource() == searchButton) {
+		if (e.getSource() == searchButton && (!searchUsername.getText().isEmpty())) {
 
-			if (!searchId.getText().isEmpty()) {
-				Long id = Long.parseLong(searchId.getText());
-				boolean staffIdInSystem = client.staffExists(id);
+	
+			boolean staffIdInSystem = client.staffExists(searchUsername.getText());
 
-				if (staffIdInSystem) {
+			if (staffIdInSystem) {
 
-					String newPassword = "";
+				logger.info("Found Admin account in database");
+				String newPassword = " ";
 
-					while (newPassword.isEmpty() && newPassword.length() < 4) {
+
+				boolean validInputs = (newPassword.isEmpty() && newPassword.length() > 4);
+				while (validInputs) {
+
+					newPassword = JOptionPane.showInputDialog(this, "Enter New Password", "Account Found",
+							JOptionPane.PLAIN_MESSAGE);
+
+					if (newPassword.length() > 4) {
+
+						logger.info("Sending request to reset Password.");
+						client.sendAction("Reset Password");
+						Admin admin = new Admin();
+						admin.setUsername(searchUsername.getText());
+						admin.setPassword(EncryptPassword.encrypt(newPassword));
+						client.sendObject(admin);
 						
-						newPassword = JOptionPane.showInputDialog(this, "Enter New Password", "Account Found", JOptionPane.PLAIN_MESSAGE);
-
-						if (newPassword != null && !newPassword.isEmpty()) {
-							client.sendAction("Reset Password");
-							client.resetPassword(id, newPassword);
-						} else {
-							JOptionPane.showMessageDialog(this, "Please enter a valid Password", "Error", JOptionPane.ERROR_MESSAGE);
-						}
+						break;
+					} else {
+						JOptionPane.showMessageDialog(this, "Please enter a valid Password", "Error",
+								JOptionPane.ERROR_MESSAGE);
 					}
-
-					
-
-					dispose();
-					loginPage = new LoginPage();
-					loginPage.setVisible(true);
-					desktopPane.add(loginPage);
-
 				}
+
+				dispose();
+				LoginPage loginPage = new LoginPage();
+				loginPage.setVisible(true);
+				desktopPane.add(loginPage);
+
 			}
 
 		}
+		
 		client.closeConnection();
 		
 		

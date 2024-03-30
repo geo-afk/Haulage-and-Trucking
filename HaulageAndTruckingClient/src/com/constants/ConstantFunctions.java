@@ -94,14 +94,23 @@ public class ConstantFunctions {
     }
     
     
-    public static Dimension initializeSize(){
-    	
-    	Toolkit toolkit = Toolkit.getDefaultToolkit();
+    public static Dimension initializeSize() {
+
+        Toolkit toolkit = Toolkit.getDefaultToolkit();
         int width = (int) (toolkit.getScreenSize().getWidth() * 0.9);
-        int height = (int) (toolkit.getScreenSize().getHeight()  * 0.9);
+        int height = (int) (toolkit.getScreenSize().getHeight() * 0.9);
 
         return new Dimension(width, height);
-        
-   }
+
+    }
+   
+    public static boolean isNumeric(String str) {
+        try {
+            Double.parseDouble(str); 
+            return true; 
+        } catch (NumberFormatException e) {
+            return false; 
+        }
+    }
 
 }

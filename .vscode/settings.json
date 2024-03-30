@@ -26,6 +26,9 @@
     "hibernate-required/txw2-2.3.1.jar"
   ],
   "cSpell.words": [
+    "booktrip",
+    "Combobox",
+    "Darcula",
     "invoicereport",
     "JDBC"
   ],
