@@ -23,7 +23,8 @@ import org.apache.logging.log4j.Logger;
 
 import com.client.Client;
 import com.constants.DatePicker;
-import model.TripReport;
+
+import src.models.TripReport;
 
 public class GenerateCustomerReport extends JPanel implements ActionListener {
 

@@ -20,8 +20,8 @@ public class CustomerBalance extends JInternalFrame {
 
       public CustomerBalance() {
 
-		super("Generate Payslip");
-		logger.info("Instantiating Generate Payslip Internal Frame");
+		super("Customer Balance");
+		logger.info("Instantiating Customer Balance Internal Frame");
 		
 	
     	setIcon();

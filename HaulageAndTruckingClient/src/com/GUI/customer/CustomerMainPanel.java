@@ -339,7 +339,8 @@ public class CustomerMainPanel extends JPanel implements ActionListener{
 
             logger.info("Creating customer object from inout fields");
 
-            boolean accountStatus = statusComboBox.getSelectedItem().toString().equalsIgnoreCase("Active");
+            boolean accountStatus = false;
+            accountStatus= statusComboBox.getSelectedItem().toString().equalsIgnoreCase("Active");
 
     
     return new Customer(companyField.getText(), contactPersonField.getText(), 

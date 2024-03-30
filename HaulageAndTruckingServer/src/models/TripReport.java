@@ -113,6 +113,16 @@ public class TripReport implements Serializable{
     public void setBilledBy(String billedBy) {
         this.billedBy = billedBy;
     }
+
+
+
+    @Override
+    public String toString() {
+        return "TripReport [invoiceNumber=" + invoiceNumber + ", company=" + company + ", sourceAddress="
+                + sourceAddress + ", destinationAddress=" + destinationAddress + ", rate=" + rate + ", driverName="
+                + driverName + ", billedBy=" + billedBy + "]";
+    }
+    
     
     
     

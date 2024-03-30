@@ -66,7 +66,7 @@ public class Trip implements Serializable{
 		return invoiceNumber;
 	}
 
-	public void setInvoiceNumber(int invoiceNumber) {
+	public void setInvoiceNumber(long invoiceNumber) {
 		this.invoiceNumber = invoiceNumber;
 	}
 

@@ -312,8 +312,38 @@ public class Server {
         public void addTrip() {
 
             try {
+                
+                model.Trip trip = (model.Trip) dataInput.readObject();
 
-               Trip tripToSave = (Trip) dataInput.readObject();
+
+                Address sourceAddress = new Address();
+                sourceAddress.setAddress1(trip.getRoute().getSourceAddress().getAddress1());
+                sourceAddress.setAddress2(trip.getRoute().getSourceAddress().getAddress2());
+                sourceAddress.setParish(trip.getRoute().getSourceAddress().getParish());
+                sourceAddress.setPostOffice(trip.getRoute().getSourceAddress().getPostOffice());
+
+                Address destinationAddress = new Address();
+                destinationAddress.setAddress1(trip.getRoute().getDestinationAddress().getAddress1());
+                destinationAddress.setAddress2(trip.getRoute().getDestinationAddress().getAddress2());
+                destinationAddress.setParish(trip.getRoute().getDestinationAddress().getParish());
+                destinationAddress.setPostOffice(trip.getRoute().getDestinationAddress().getPostOffice());
+               
+                
+                Route routeToSave = new Route();
+                routeToSave.setId(trip.getRoute().getId());
+                routeToSave.setSourceAddress(sourceAddress);
+                routeToSave.setDestinationAddress(destinationAddress);
+                routeToSave.setSource(trip.getRoute().getSource());
+
+                Trip tripToSave = new Trip();
+                tripToSave.setBilledBy(trip.getBilledBy());
+                tripToSave.setCompany(trip.getCompany());
+                tripToSave.setDeliveryDate(trip.getDeliveryDate());
+                tripToSave.setDriver(trip.getDriver());
+                tripToSave.setInvoiceNumber(trip.getInvoiceNumber());
+                tripToSave.setPayStatus(trip.getPayStatus());
+                tripToSave.setRoute(routeToSave);
+
                
 
                 SaveEntityToDB.saveObject(tripToSave, Trip.class);

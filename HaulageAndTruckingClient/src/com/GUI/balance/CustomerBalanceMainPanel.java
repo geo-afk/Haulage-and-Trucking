@@ -1,5 +1,6 @@
 package com.gui.balance;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -12,6 +13,7 @@ import javax.swing.JButton;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import org.apache.logging.log4j.LogManager;
@@ -31,19 +33,24 @@ public class CustomerBalanceMainPanel extends JInternalFrame {
     private JLabel customerBalance;
 
     
+    private JPanel panel;
 
 
     public CustomerBalanceMainPanel() {
 
         
         internalPanel();
+        add(panel, BorderLayout.CENTER);
     }
     
 
-       private void internalPanel(){
+    private void internalPanel() {
 
+        setLayout(new BorderLayout());
         GridBagConstraints constraints = new GridBagConstraints();
-        setLayout(new GridBagLayout());
+        panel = new JPanel();
+        panel.setLayout(new GridBagLayout());
+       
     
         setCustomerName(constraints);
 
@@ -56,7 +63,7 @@ public class CustomerBalanceMainPanel extends JInternalFrame {
 
         
 
-        setBorder(BorderFactory.createEmptyBorder(20, 15, 0, 0));
+        panel.setBorder(BorderFactory.createEmptyBorder(20, 15, 0, 0));
 
     }
 
@@ -68,13 +75,13 @@ public class CustomerBalanceMainPanel extends JInternalFrame {
 
         constraints.gridx = 0;
         constraints.gridy = 0;
-        add(companyLabel, constraints);
+        panel.add(companyLabel, constraints);
 
         customerName = new JTextField(45);
         customerName.setPreferredSize(new Dimension(0, 30));
         constraints.gridx = 1;
         constraints.gridy = 0;
-        add(customerName, constraints);
+        panel.add(customerName, constraints);
     }
     
     private void searchButton(GridBagConstraints constraints){
@@ -85,13 +92,13 @@ public class CustomerBalanceMainPanel extends JInternalFrame {
 
         constraints.gridx = 0;
         constraints.gridy = 1;
-		add(companyLabel, constraints);
+		panel.add(companyLabel, constraints);
 		
 		customerName = new JTextField(45);
         customerName.setPreferredSize(new Dimension(0, 30));
 		constraints.gridx = 1;
         constraints.gridy = 1;
-		add(customerName, constraints);
+		panel.add(customerName, constraints);
     }
 
     private void setPayStatus(GridBagConstraints constraints) {
@@ -127,7 +134,7 @@ public class CustomerBalanceMainPanel extends JInternalFrame {
         constraints.anchor = GridBagConstraints.CENTER;
         constraints.gridy = 2;
         constraints.insets = new Insets(20, 0, 20, 0);
-        add(btn, constraints);
+        panel.add(btn, constraints);
         
        
 
@@ -141,7 +148,7 @@ public class CustomerBalanceMainPanel extends JInternalFrame {
 
         constraints.gridx = 0;
         constraints.gridy = 3;
-        add(label, constraints);
+        panel.add(label, constraints);
         
 
         activeAccount = new JLabel("");
@@ -149,7 +156,7 @@ public class CustomerBalanceMainPanel extends JInternalFrame {
 
         constraints.gridx = 1;
         constraints.gridy = 3;
-		add(activeAccount, constraints);
+		panel.add(activeAccount, constraints);
 
     }
 
@@ -160,14 +167,14 @@ public class CustomerBalanceMainPanel extends JInternalFrame {
 
         constraints.gridx = 0;
         constraints.gridy = 4;
-        add(label, constraints);
+        panel.add(label, constraints);
         
         customerBalance = new JLabel("");
         customerBalance.setFont(new Font(null,Font.ITALIC, 15));
 
         constraints.gridx = 1;
         constraints.gridy = 4;
-		add(customerBalance, constraints);
+		panel.add(customerBalance, constraints);
 
     }
 

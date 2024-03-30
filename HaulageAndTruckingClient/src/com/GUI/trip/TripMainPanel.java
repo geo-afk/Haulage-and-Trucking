@@ -35,6 +35,7 @@ public class TripMainPanel extends JPanel implements ActionListener{
 
     private Map<Long, Route> routeMap = new HashMap<>();
     private List<Customer> customers;
+    private List<Staff> staffs;
     private String[] payStatus = { "", "Paid", "Unpaid" };
    
 
@@ -59,10 +60,11 @@ public class TripMainPanel extends JPanel implements ActionListener{
 
     public TripMainPanel() {
         internalPanel();
+
+        getDriver();
         getStaffIds();
         getRoutes();
         getCustomer();
-        getDriver();
     }
 
     private void internalPanel() {
@@ -109,38 +111,35 @@ public class TripMainPanel extends JPanel implements ActionListener{
         client.sendAction("Get Customer");
 
         customers = (List<Customer>) client.getObject();
-        billedByComboBox.addItem(" ");
+        companyComboBox.addItem(" ");
 
-        if (customers.isEmpty()) {
-            companyComboBox.addItem("NULL");
-        }
-
-        else {
+        if (!customers.isEmpty()) {
+      
             for (Customer customer : customers) {
-                billedByComboBox.addItem(customer.getCompanyName());
+                companyComboBox.addItem(customer.getCompanyName());
             }
         }
     }
     
 
-      @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
     private void getDriver() {
         
         Client client = new Client();
         client.sendAction("Get Staff");
         
-        List<Staff> staffs = (List<Staff>) client.getObject();
+        staffs = (List<Staff>) client.getObject();
         driverComboBox.addItem(" ");
 
-        if (customers.isEmpty()) {
-            driverComboBox.addItem("NULL");
-        }
-        
-        else {
+        if (!staffs.isEmpty()) {
+
             for (Staff staff : staffs) {
 
-                if (staff.getPosition().equals("Driver")) {   
-                    driverComboBox.addItem(staff.getFirstName() + " " + staff.getLastName());
+                if (staff.getPosition().equals("Driver")) {
+        
+                    String staffName = staff.getFirstName() + " " + staff.getLastName();
+                    
+                    driverComboBox.addItem(staffName);
                 }
             }
         }
@@ -154,21 +153,18 @@ public class TripMainPanel extends JPanel implements ActionListener{
         routeMap = (Map<Long, Route>) client.getObject();
         routeComboBox.addItem(" ");
 
-        if (routeMap.isEmpty()) {
-            routeComboBox.addItem("NULL");
-        } else {
-           
+        if (!routeMap.isEmpty()) {
 
             for (Map.Entry<Long, Route> entry : routeMap.entrySet()) {
 
                 String routeId = String.valueOf(entry.getKey());
-               
+
                 String sourceAddress = entry.getValue().getSourceAddress().getAddress1() + " "
                         + entry.getValue().getSourceAddress().getAddress2();
 
                 String destinationAddress = entry.getValue().getDestinationAddress().getAddress1() + " "
                         + entry.getValue().getDestinationAddress().getAddress2();
-                routeComboBox.addItem(routeId + " - " +sourceAddress + " To " + destinationAddress);
+                routeComboBox.addItem(routeId + " - " + sourceAddress + " To " + destinationAddress);
 
             }
         }
@@ -192,26 +188,7 @@ public class TripMainPanel extends JPanel implements ActionListener{
         companyComboBox = new JComboBox<>();
         companyComboBox.setPreferredSize(new Dimension(500, 30));
 
-        companyComboBox.addActionListener(e -> {
-            
-            String companyName = companyComboBox.getSelectedItem().toString();
-
-            for (Customer customer : customers) {
-                if (customer.getCompanyName().equalsIgnoreCase(companyName) && (!customer.getStatus())) {
-                     
-                        
-                    billedByComboBox.setEditable(false);
-                    routeComboBox.setEditable(false);
-                    submitButton.setEnabled(false);
-                    driverComboBox.setEditable(false);
-                    deliveryDateField.setEnabled(false);
-                    payStatusComboBox.setEditable(false);
-
-                    
-                }
-            }
-        }
-        );
+        companyComboBox.addActionListener(this);
         constraints.gridx = 1;
         constraints.gridy = 0;
 
@@ -347,10 +324,34 @@ public class TripMainPanel extends JPanel implements ActionListener{
 
             client.closeConnection();
         }
+        if (e.getSource() == companyComboBox) {
+            
+            String companyName = companyComboBox.getSelectedItem().toString();
+
+            for (Customer customer : customers) {
+                if (customer.getCompanyName().equalsIgnoreCase(companyName) && (!customer.getStatus())) {
+                     
+                        
+                    billedByComboBox.setEditable(false);
+                    routeComboBox.setEditable(false);
+                    submitButton.setEnabled(false);
+                    driverComboBox.setEditable(false);
+                    deliveryDateField.setEnabled(false);
+                    payStatusComboBox.setEditable(false);
+
+                    
+                }
+            }
+        }
     }
     
-     private boolean validateInputFields() {
+    private boolean validateInputFields() {
 
+        if (companyComboBox.getSelectedItem() == null) {
+            System.out.println("ComboBox -> NULL NULL NULL");
+        }
+
+        
          if (companyComboBox.getSelectedItem().toString().isEmpty() && billedByComboBox.getSelectedItem().toString().isEmpty()
                 && routeComboBox.getSelectedItem().toString().isEmpty() && driverComboBox.getSelectedItem().toString().isEmpty()
                 && payStatusComboBox.getSelectedItem().toString().isEmpty() ) 

@@ -56,6 +56,9 @@ public class GetTripReport {
             logger.error("Error occurred while generating trip report: " + e.getMessage(), e);
         }
 
+        for (TripReport report : tripReports) {
+            System.out.println(report);
+        }
         return tripReports;
     }
 }
